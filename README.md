@@ -7,6 +7,11 @@ SMS Forwarder is a simple Android application that forwards incoming SMS message
 Example use-case: Getting TOTP tokens directly to your accountant performing payments via some bank that has extremely poor RBAC and MFA management. 
 Note: It's generally not recommended to forward any SMS messages, nor use SMS as 2FA. At all.
 
+
+### Screenshot
+
+![Screenshot](img/smsfwd-screenshot.png)
+
 ### Features
 
 Automatically forwards incoming SMS messages to a predefined phone number.
@@ -33,5 +38,6 @@ The application requires the following permissions:
 * Launch the SMS Forwarder app on your device.
 * Grant the necessary SMS permissions when prompted.
 * Specify the destination SMS number in the app.
+* Enable SMS Forwarding by enabling  the toggle in the app.
 * App  will continue running in the background and forward incoming SMS messages to the specified phone number automatically.
-* Stop the app to stop forwarding the SMS messages.
+* Stop the app to stop forwarding the SMS messages, or disable the SMS Forwarding toggle in the app.

@@ -7,11 +7,14 @@ import androidx.annotation.NonNull;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.content.pm.PackageManager;
 import android.Manifest;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String PHONE_NUMBER_KEY = "destinationPhoneNumber";
     private EditText phoneNumberInput;
     private Button savePhoneNumberButton;
+    private Switch smsForwardingToggle;
 
     private void requestSmsPermissions() {
         String[] permissions = {Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
@@ -30,7 +34,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean smsForwardingEnabled = sharedPreferences.getBoolean("sms_forwarding_enabled", false);
+
         setContentView(R.layout.activity_main);
+        smsForwardingToggle = findViewById(R.id.sms_forwarding_toggle);
+        smsForwardingToggle.setChecked(smsForwardingEnabled);
 
         requestSmsPermissions();
 
@@ -43,6 +53,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 savePhoneNumber();
+            }
+        });
+
+        smsForwardingToggle.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("sms_forwarding_enabled", smsForwardingToggle.isChecked());
+                editor.apply();
+
+                if (smsForwardingToggle.isChecked()) {
+                    Toast.makeText(MainActivity.this, "SMS Forwarding enabled", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "SMS Forwarding disabled", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

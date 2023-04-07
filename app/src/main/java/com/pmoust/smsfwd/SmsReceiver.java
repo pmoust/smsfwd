@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -20,6 +21,9 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean smsForwardingEnabled = sharedPreferences.getBoolean("sms_forwarding_enabled", false);
+
         if (intent.getAction() != null && intent.getAction().equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
             SmsMessage[] messages = extractSmsMessages(intent.getExtras());
             for (SmsMessage message : messages) {
@@ -30,7 +34,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 String destinationPhoneNumber = getDestinationPhoneNumber(context);
                 String defaultRegion = Locale.getDefault().getCountry();
 
-                if (!destinationPhoneNumber.isEmpty() && !isSamePhoneNumber(senderPhoneNumber, destinationPhoneNumber, defaultRegion)) {
+                if (smsForwardingEnabled && !destinationPhoneNumber.isEmpty() && !isSamePhoneNumber(senderPhoneNumber, destinationPhoneNumber, defaultRegion)) {
                     // Forward the SMS
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(destinationPhoneNumber, null, messageText, null, null);
