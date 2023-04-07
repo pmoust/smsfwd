@@ -58,7 +58,7 @@ public class SmsReceiver extends BroadcastReceiver {
         return sharedPreferences.getString(PHONE_NUMBER_KEY, "");
     }
 
-    private boolean isSamePhoneNumber(String senderPhoneNumber, String destinationPhoneNumber) {
+    boolean isSamePhoneNumber(String senderPhoneNumber, String destinationPhoneNumber) {
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
         String defaultRegion = Locale.getDefault().getCountry();
         try {
