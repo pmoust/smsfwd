@@ -28,8 +28,9 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 // Retrieve the destination phone number from SharedPreferences
                 String destinationPhoneNumber = getDestinationPhoneNumber(context);
+                String defaultRegion = Locale.getDefault().getCountry();
 
-                if (!destinationPhoneNumber.isEmpty() && !isSamePhoneNumber(senderPhoneNumber, destinationPhoneNumber)) {
+                if (!destinationPhoneNumber.isEmpty() && !isSamePhoneNumber(senderPhoneNumber, destinationPhoneNumber, defaultRegion)) {
                     // Forward the SMS
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(destinationPhoneNumber, null, messageText, null, null);
@@ -58,20 +59,16 @@ public class SmsReceiver extends BroadcastReceiver {
         return sharedPreferences.getString(PHONE_NUMBER_KEY, "");
     }
 
-    boolean isSamePhoneNumber(String senderPhoneNumber, String destinationPhoneNumber) {
-        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-        String defaultRegion = Locale.getDefault().getCountry();
+    public static boolean isSamePhoneNumber(String senderPhoneNumber, String destinationPhoneNumber, String defaultRegion) {
         try {
+            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+
             Phonenumber.PhoneNumber senderNumber = phoneNumberUtil.parse(senderPhoneNumber, defaultRegion);
             Phonenumber.PhoneNumber destinationNumber = phoneNumberUtil.parse(destinationPhoneNumber, defaultRegion);
 
-            // Strip the country code from both numbers
-            String senderNationalNumber = String.valueOf(senderNumber.getNationalNumber());
-            String destinationNationalNumber = String.valueOf(destinationNumber.getNationalNumber());
-
-            return senderNationalNumber.equals(destinationNationalNumber);
+            return phoneNumberUtil.isNumberMatch(senderNumber, destinationNumber) == PhoneNumberUtil.MatchType.EXACT_MATCH;
         } catch (NumberParseException e) {
-            e.printStackTrace();
+            android.util.Log.e("SmsReceiver", "Error parsing phone numbers", e);
             return false;
         }
     }
