@@ -1,4 +1,4 @@
-# swmsfwd
+# smsfwd
 
 ## SMS Forwarder Android Application
 
@@ -23,7 +23,6 @@ The application requires the following permissions:
 
 * Clone or download the repository containing the source code.
 * Open the project in Android Studio.
-* Edit the destination phone number in `FORWARD_TO_PHONE_NUMBER` in the `SmsReceiver` class.
 * Connect your Android device to your computer with USB debugging enabled.
 * Press the "Run" button (green play icon) in the toolbar or press Shift + F10.
 * Select your connected device in the "Select Deployment Target" window and click "OK".
@@ -33,5 +32,6 @@ The application requires the following permissions:
 
 * Launch the SMS Forwarder app on your device.
 * Grant the necessary SMS permissions when prompted.
+* Specify the destination SMS number in the app.
 * App  will continue running in the background and forward incoming SMS messages to the specified phone number automatically.
 * Stop the app to stop forwarding the SMS messages.
