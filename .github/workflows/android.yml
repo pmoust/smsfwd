@@ -26,4 +26,11 @@ jobs:
       run: chmod +x gradlew
 
     - name: Run unit tests
-      run: ./gradlew test --stacktrace
+      run: ./gradlew test --info --stacktrace
+
+    - name: Upload test failure report
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-failure-report
+        path: app/build/reports/tests/testDebugUnitTest/failed-tests/
